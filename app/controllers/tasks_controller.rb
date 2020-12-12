@@ -4,7 +4,8 @@ class TasksController < ApplicationController
 
   
   def index
-    @tasks = Task.all
+      @task = current_user.tasks.build  
+      @tasks = current_user.tasks.order(id: :desc).page(params[:page])
   end
 
   def show
@@ -60,8 +61,8 @@ class TasksController < ApplicationController
   end
   
   def correct_user
-    @micropost = current_user.microposts.find_by(id: params[:id])
-    unless @micropost
+    @task = current_user.tasks.find_by(id: params[:id])
+    unless @task
       redirect_to root_url
     end
   end
