@@ -5,15 +5,17 @@ class TasksController < ApplicationController
   
   def index
       @task = current_user.tasks.build  
-      @tasks = current_user.tasks.order(id: :desc).page(params[:page])
+      @tasks = current_user.tasks.all
   end
 
   def show
     @task = Task.find(params[:id])
+    @tasks = current_user.tasks.all
   end
 
   def new
     @task = Task.new
+    @tasks = current_user.tasks.all
   end
 
   def create
@@ -22,15 +24,13 @@ class TasksController < ApplicationController
       flash[:success] = 'メッセージを投稿しました。'
       redirect_to root_url
     else
-      @tasks = current_user.tasks.order(id: :desc).page(params[:page])
+      @tasks = current_user.tasks.order
       flash.now[:danger] = 'メッセージの投稿に失敗しました。'
       render :new
     end
   end
 
-  def edit
-    @task = Task.find(params[:id])
-  end
+
 
   def update
     @task = Task.find(params[:id])
@@ -42,6 +42,8 @@ class TasksController < ApplicationController
       flash.now[:danger] = 'Task は更新されませんでした'
       render :edit
     end
+    
+    @tasks = current_user.tasks.all
   end
 
   def destroy
@@ -49,6 +51,8 @@ class TasksController < ApplicationController
     @task.destroy
     flash[:success] = 'メッセージを削除しました。'
     redirect_back(fallback_location: root_path)
+    
+    @tasks = current_user.tasks.all
 
   end
   
